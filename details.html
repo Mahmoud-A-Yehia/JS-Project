@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <!-- Link to external CSS file -->
 </head>
 
 <body>
-    <h1>Product Details</h1>
+    <div class="content">
+        <h2 class="text-shadows">Product Details</h2>
+    </div>
 
     <div id="product-details">
         <h2 id="product-name"></h2>
@@ -19,11 +21,10 @@
         <p id="product-description"></p>
         <img id="product-image" width="200" alt="">
         <p id="product-rating"></p>
-
         <!-- Back button to return to main product catalog page -->
-        <button onclick="goBack()">Back to Product Catalog</button>
+        <button class="add-to-cart" onclick="addtocart(product.id)">Add to cart</button>
+        <button class="add-to-cart" onclick="goBack()">Back to Product Catalog</button>
     </div>
-
     <script>
         // Retrieve product details from sessionStorage
         const productDetails = JSON.parse(sessionStorage.getItem('productDetails'));

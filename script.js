@@ -1,5 +1,11 @@
 // Function to fetch product details
-let cart = [];
+let local=localStorage.getItem('cart');
+if(local == null){
+var cart = [];
+}else{
+var cart = JSON.parse(local);
+}
+
 function fetchProductDetails(productId) {
     fetch(`https://dummyjson.com/products/${productId}`)
         .then(res => {
@@ -46,7 +52,7 @@ function displayProducts(products) {
         detailsDiv.appendChild(nameElement);
 
         // Product Price
-        const priceElement = document.createElement('p');
+        const priceElement = document.createElement('h2');
         priceElement.textContent = `Price: $${product.price}`;
         detailsDiv.appendChild(priceElement);
 
@@ -56,11 +62,18 @@ function displayProducts(products) {
         detailsDiv.appendChild(descElement);
 
         // Add to Cart Button
+        //const addToCartBtn = document.createElement('button');
+        //addToCartBtn.classList.add('add-to-cart');
+        //addToCartBtn.innerHTML = `<button class="remove" onclick="addtocart(${product.id})"></button>`;
+        //detailsDiv.appendChild(addToCartBtn);
+        //add to cart 
         const addToCartBtn = document.createElement('button');
         addToCartBtn.classList.add('add-to-cart');
-        addToCartBtn.innerHTML = `<button class="remove" onclick="addtocart(${product.id})">Add to Cart</button>`;
+        addToCartBtn.textContent = 'BUY NOW'
+        addToCartBtn.addEventListener('click', () => {
+            addtocart(product.id);
+        });
         detailsDiv.appendChild(addToCartBtn);
-
         // Product Details Button
         const detailsBtn = document.createElement('button');
         detailsBtn.classList.add('product-details-btn');
@@ -81,7 +94,7 @@ function performSearch() {
     fetch(`https://dummyjson.com/products/search?q=${searchTerm}`)
         .then(res => res.json())
         .then(data => {
-            displayProducts(data);added
+            displayProducts(data); 
         })
         .catch(error => {
             console.error('Error fetching data:', error);
@@ -129,10 +142,9 @@ fetch('https://dummyjson.com/products')
                 displayProducts(data); // Display all products
             } else {
                 // Filter products by selected category
-                fetch('https://dummyjson.com/products/category/'+selectedCategory)
-                .then(res => res.json())
-                .then(dat => displayProducts(dat) );
-                ;
+                fetch('https://dummyjson.com/products/category/' + selectedCategory)
+                    .then(res => res.json())
+                    .then(dat => displayProducts(dat));;
             }
         });
 
@@ -152,10 +164,23 @@ function displayError() {
 }
 
 
-function addtocart(idd){
-cart.push({
-    id: idd,
-    quantity:1,
-  });
-  localStorage.setItem('cart',JSON.stringify(cart))
+function addtocart(idd) {
+    let t = false;
+    for (let i = 0; i < cart.length; i++) {
+        if (cart[i].id == idd) {
+            cart.splice(i, 1, {
+                id: idd,
+                quantity: cart[i].quantity + 1,
+            })
+            t = true;
+            break;
+        }
+    }
+    if (t == false) {
+        cart.push({
+            id: idd,
+            quantity: 1,
+        });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart))
 }
