@@ -164,14 +164,22 @@ header {
 /* Dropdown styling */
 
 .dropbtn {
-    background-color: transparent;
-    color: #fff;
+    /* background-color: #666; /*edit here*/
+    /* color: #fff;
     border: none;
     cursor: pointer;
     padding: 10px 15px;
     font-size: 14px;
     text-transform: uppercase;
+    transition: background-color 0.3s ease; */
+    padding: 8px 15px;
+    border: none;
+    background-color: #666;
+    color: #fff;
+    border-radius: 0 3px 3px 0;
+    cursor: pointer;
     transition: background-color 0.3s ease;
+    border-radius: 5px;
 }
 
 .dropbtn:hover {
@@ -229,6 +237,7 @@ header {
     transition: background-color 0.3s ease;
     border-radius: 5px;
 }
+
 
 .navbar-search button:hover {
     background-color: #0056b3;
