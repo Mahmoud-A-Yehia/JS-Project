@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstName = document.getElementById('signup-firstName').value;
         const lastName = document.getElementById('signup-lastName').value;
         const gender = document.getElementById('signup-gender').value;
+        var user_cart = [];
         
         const user = {
             id: Date.now(),
@@ -31,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
             lastName: lastName,
             gender: gender,
             image: 'https://dummyjson.com/image/i/products/1/thumbnail.jpg',
-            token: 'dummyToken'
+            token: 'dummyToken',
+            userCart: user_cart
         };
         
         localStorage.setItem('user-' + username, JSON.stringify(user));
@@ -46,10 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('login-password').value;
         
         let storedUser = JSON.parse(localStorage.getItem('user-' + username));
+        // let userCart = JSON.parse(localStorage.getItem(userCart)); 
+        localStorage.setItem("cart" , JSON.stringify(storedUser.userCart));
         
         if (storedUser && storedUser.password === password) {
             localStorage.setItem('currentUser', JSON.stringify(storedUser));
             loginMessage.textContent = 'User logged in successfully!';
+            window.location.href = 'index.html'; // Redirect to another page
             showProfile(storedUser);
         } else {
             
@@ -60,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('user-' + username, JSON.stringify(apiUser));
                     localStorage.setItem('currentUser', JSON.stringify(apiUser));
                     loginMessage.textContent = 'User logged in successfully!';
+                    window.location.href = 'index.html'; // Redirect to another page
+
                     showProfile(storedUser);
                 } else {
                     loginMessage.textContent = 'Invalid credentials!';
@@ -72,8 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('logout').addEventListener('click', function() {
+        let logoutCart = JSON.parse(localStorage.getItem("cart"));
+        let currenUser1 = JSON.parse(localStorage.getItem("currentUser"));
+        currenUser1.userCart = logoutCart;
+        localStorage.setItem('user-' + currenUser1.username ,JSON.stringify(currenUser1));
         localStorage.removeItem('currentUser');
-        window.location.reload();
+        localStorage.removeItem('cart');
+        // window.location.reload();
+        window.location.href = 'index.html'; // Redirect to another page
     });
 
     document.getElementById('signup-link').addEventListener('click', function(event) {
