@@ -22,12 +22,24 @@
         <img id="product-image" width="200" alt="">
         <p id="product-rating"></p>
         <!-- Back button to return to main product catalog page -->
-        <button class="add-to-cart" onclick="addtocart(product.id)">Add to cart</button>
+        <button id="add-t-cart" class="add-to-cart" >Add to cart</button>
         <button class="add-to-cart" onclick="goBack()">Back to Product Catalog</button>
     </div>
     <script>
-        // Retrieve product details from sessionStorage
+        let local = localStorage.getItem('cart');
+        if (local == null) {
+            var cart = [];
+        } else {
+            var cart = JSON.parse(local);
+        }
+
         const productDetails = JSON.parse(sessionStorage.getItem('productDetails'));
+
+        const addToCartBtn = document.getElementById("add-t-cart")
+        addToCartBtn.addEventListener('click', () => {
+            addtocart(productDetails.id);
+        });
+        // Retrieve product details from sessionStorage
 
         if (productDetails) {
             // Update DOM with product details
@@ -46,6 +58,28 @@
         function goBack() {
             window.location.href = 'index.html';
         }
+
+        function addtocart(idd) {
+            let t = false;
+            for (let i = 0; i < cart.length; i++) {
+                if (cart[i].id == idd) {
+                    cart.splice(i, 1, {
+                        id: idd,
+                        quantity: cart[i].quantity + 1,
+                    })
+                    t = true;
+                    break;
+                }
+            }
+            if (t == false) {
+                cart.push({
+                    id: idd,
+                    quantity: 1,
+                });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart))
+        }
+
     </script>
 </body>
 

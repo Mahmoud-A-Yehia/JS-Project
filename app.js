@@ -12,9 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
         showProfile(storedUser);
     }
 
-    document.getElementById('signup-form').addEventListener('submit', function(event) {
+    document.getElementById('signup-form').addEventListener('submit', function (event) {
         event.preventDefault();
-        
+
         const username = document.getElementById('signup-username').value;
         const email = document.getElementById('signup-email').value;
         const password = document.getElementById('signup-password').value;
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const lastName = document.getElementById('signup-lastName').value;
         const gender = document.getElementById('signup-gender').value;
         var user_cart = [];
-        
+
         const user = {
             id: Date.now(),
             username: username,
@@ -35,29 +35,29 @@ document.addEventListener('DOMContentLoaded', () => {
             token: 'dummyToken',
             userCart: user_cart
         };
-        
+
         localStorage.setItem('user-' + username, JSON.stringify(user));
         signupMessage.textContent = 'User signed up successfully!';
         toggleForms();
     });
 
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
+    document.getElementById('login-form').addEventListener('submit', async function (event) {
         event.preventDefault();
-        
+
         const username = document.getElementById('login-username').value;
         const password = document.getElementById('login-password').value;
-        
+
         let storedUser = JSON.parse(localStorage.getItem('user-' + username));
         // let userCart = JSON.parse(localStorage.getItem(userCart)); 
-        localStorage.setItem("cart" , JSON.stringify(storedUser.userCart));
-        
+
         if (storedUser && storedUser.password === password) {
             localStorage.setItem('currentUser', JSON.stringify(storedUser));
+            localStorage.setItem("cart", JSON.stringify(storedUser.userCart));
             loginMessage.textContent = 'User logged in successfully!';
             window.location.href = 'index.html'; // Redirect to another page
             showProfile(storedUser);
         } else {
-            
+
             try {
                 const apiUser = await fetchUserFromAPI(username, password);
                 if (apiUser && apiUser.password === password) {
@@ -78,23 +78,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('logout').addEventListener('click', function() {
+    document.getElementById('logout').addEventListener('click', function () {
         let logoutCart = JSON.parse(localStorage.getItem("cart"));
         let currenUser1 = JSON.parse(localStorage.getItem("currentUser"));
         currenUser1.userCart = logoutCart;
-        localStorage.setItem('user-' + currenUser1.username ,JSON.stringify(currenUser1));
+        localStorage.setItem('user-' + currenUser1.username, JSON.stringify(currenUser1));
         localStorage.removeItem('currentUser');
         localStorage.removeItem('cart');
         // window.location.reload();
         window.location.href = 'index.html'; // Redirect to another page
     });
 
-    document.getElementById('signup-link').addEventListener('click', function(event) {
+    document.getElementById('signup-link').addEventListener('click', function (event) {
         event.preventDefault();
         toggleForms();
     });
 
-    document.getElementById('login-link').addEventListener('click', function(event) {
+    document.getElementById('login-link').addEventListener('click', function (event) {
         event.preventDefault();
         toggleForms();
     });
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.token) {
             return {
                 ...data,
-                password: password 
+                password: password
             };
         }
 
