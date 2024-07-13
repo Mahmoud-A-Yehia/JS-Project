@@ -1,4 +1,6 @@
 // Function to fetch product details
+let cart = [];
+
 function fetchProductDetails(productId) {
     fetch(`https://dummyjson.com/products/${productId}`)
         .then(res => {
@@ -45,7 +47,7 @@ function displayProducts(products) {
         detailsDiv.appendChild(nameElement);
 
         // Product Price
-        const priceElement = document.createElement('p');
+        const priceElement = document.createElement('h2');
         priceElement.textContent = `Price: $${product.price}`;
         detailsDiv.appendChild(priceElement);
 
@@ -55,11 +57,18 @@ function displayProducts(products) {
         detailsDiv.appendChild(descElement);
 
         // Add to Cart Button
+        //const addToCartBtn = document.createElement('button');
+        //addToCartBtn.classList.add('add-to-cart');
+        //addToCartBtn.innerHTML = `<button class="remove" onclick="addtocart(${product.id})"></button>`;
+        //detailsDiv.appendChild(addToCartBtn);
+        //add to cart 
         const addToCartBtn = document.createElement('button');
         addToCartBtn.classList.add('add-to-cart');
-        addToCartBtn.textContent = 'Add to Cart';
+        addToCartBtn.textContent = 'BUY NOW'
+        addToCartBtn.addEventListener('click', () => {
+            addtocart(product.id);
+        });
         detailsDiv.appendChild(addToCartBtn);
-
         // Product Details Button
         const detailsBtn = document.createElement('button');
         detailsBtn.classList.add('product-details-btn');
@@ -88,15 +97,23 @@ function performSearch() {
         });
 }
 
+
+
+const categories = new Set();
+fetch('https://dummyjson.com/products/categories')
+    .then(response => response.json())
+    .then(data => {
+        // Extract categories from the data
+        data.forEach(product => {
+            categories.add(product.slug);
+        });
+    });
+
 // Function to fetch categories and populate dropdown
 fetch('https://dummyjson.com/products')
     .then(response => response.json())
     .then(data => {
-        const categories = new Set();
-        // Extract categories from the data
-        data.products.forEach(product => {
-            categories.add(product.category);
-        });
+        console.log(categories)
 
         // Populate dropdown with categories including a default option
         const dropdown = document.getElementById('categoryDropdown');
@@ -120,10 +137,9 @@ fetch('https://dummyjson.com/products')
                 displayProducts(data); // Display all products
             } else {
                 // Filter products by selected category
-                const filteredProducts = {
-                    products: data.products.filter(product => product.category === selectedCategory)
-                };
-                displayProducts(filteredProducts);
+                fetch('https://dummyjson.com/products/category/' + selectedCategory)
+                    .then(res => res.json())
+                    .then(dat => displayProducts(dat));;
             }
         });
 
@@ -140,4 +156,13 @@ fetch('https://dummyjson.com/products')
 function displayError() {
     const productListDiv = document.getElementById('product-list');
     productListDiv.innerHTML = '<p>Error fetching data. Please try again later.</p>';
+}
+
+
+function addtocart(idd) {
+    cart.push({
+        id: idd,
+        quantity: 1,
+    });
+    localStorage.setItem('cart', JSON.stringify(cart))
 }
